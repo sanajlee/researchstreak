@@ -541,17 +541,34 @@
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
 
+      setStatus(authStatus, "로그인 시도 중...");
+
       if (!email || !password) {
         setStatus(authStatus, "이메일과 비밀번호를 넣어줘.", true);
         return;
       }
 
-      const { error } = await client.auth.signInWithPassword({ email, password });
-      if (error) {
-        setStatus(authStatus, error.message, true);
-        return;
+      try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          setStatus(authStatus, `로그인 실패: ${error.message}`, true);
+          console.error("Login error:", error);
+          return;
+        }
+
+        if (!data.session) {
+          setStatus(authStatus, "로그인 응답은 왔는데 세션이 없음. 이메일 인증 설정을 확인해봐.", true);
+          console.warn("Login data without session:", data);
+          return;
+        }
+
+        setStatus(authStatus, "로그인 성공. 프로필 불러오는 중...");
+        await loadSession();
+      } catch (err) {
+        setStatus(authStatus, `로그인 중 예외 발생: ${err.message}`, true);
+        console.error("Unexpected login exception:", err);
       }
-      await loadSession();
     }
 
     async function logout() {
