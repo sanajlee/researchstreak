@@ -95,13 +95,22 @@
     .secondary { background: #eee8d8; color: var(--ink); }
     .danger { background: var(--danger); }
 
+    .check-button-slot {
+      margin: 14px 0;
+    }
+
     .big-check {
       width: 100%;
       padding: 22px;
       font-size: 1.2rem;
       background: linear-gradient(135deg, var(--accent), #ff7a59);
       color: #1d1400;
-      margin: 14px 0;
+      margin: 0;
+    }
+
+    .undo-check {
+      background: linear-gradient(135deg, #eee8d8, #d8cfbd);
+      color: var(--ink);
     }
 
     .status { min-height: 24px; color: var(--muted); font-size: 0.95rem; margin-top: 10px; }
@@ -340,8 +349,10 @@
         <div id="todayBadge" class="today-badge">오늘 아직 안 함</div>
       </div>
 
-      <button id="checkBtn" class="big-check">오늘 연구했다 ✍️</button>
-      <button id="undoCheckBtn" class="secondary hidden">오늘 기록 취소</button>
+      <div class="check-button-slot">
+        <button id="checkBtn" class="big-check">오늘 연구했다 ✍️</button>
+        <button id="undoCheckBtn" class="big-check undo-check hidden">오늘 기록 취소 ↩️</button>
+      </div>
 
       <div class="profile-row">
         <div>
