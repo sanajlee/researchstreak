@@ -766,14 +766,31 @@
       return data.map((row) => row.log_date);
     }
 
+    function isWeekendKST(dateStr) {
+      const d = new Date(dateStr);
+      const day = d.getDay(); // 0=일, 6=토
+      return day === 0 || day === 6;
+    }
+
     function calculateCurrentStreak(logDates) {
       const dateSet = new Set(logDates);
       let streak = 0;
+
       for (let i = 0; i < 3650; i++) {
         const target = dateMinusDaysKST(i);
-        if (dateSet.has(target)) streak += 1;
-        else break;
+
+        if (dateSet.has(target)) {
+          // 기록 있음 → +1
+          streak += 1;
+        } else if (isWeekendKST(target)) {
+          // 주말인데 기록 없음 → 그냥 스킵
+          continue;
+        } else {
+          // 평일인데 기록 없음 → streak 종료
+          break;
+        }
       }
+
       return streak;
     }
 
