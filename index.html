@@ -585,7 +585,9 @@
         renderLoadingLoggedIn();
         currentProfile = await getProfile(currentUser);
         renderLoggedIn();
-        await         await refreshAll();e);
+        await refreshAll();
+      } catch (err) {
+        setStatus(authStatus, `로그인 중단: ${err.message}`, true);
         console.error("Unexpected login exception:", err);
       }
     }
@@ -649,10 +651,7 @@
         currentProfile = await getProfile(currentUser);
         renderLoggedIn();
 
-        await Promise.all([
-          refreshMine(),
-          refreshLeaderboard()
-        ]);
+        await refreshAll();
       } catch (err) {
         console.error("loadSession failed", err);
         renderLoggedOut();
@@ -701,7 +700,11 @@
         .eq("log_date", todayKST())
         .maybeSingle();
       if (error) throw error;
-      todayLogId = data?.id || null    async function checkToday() {
+      todayLogId = data?.id || null;
+      return Boolean(data);
+    }
+
+    async function checkToday() {
       if (!currentUser) return;
       checkBtn.disabled = true;
       undoCheckBtn.disabled = true;
@@ -742,8 +745,6 @@
       await refreshAll();
     }
 
-    async function getUserLogs    }
-
     async function getUserLogs(userId) {
       const { data, error } = await client
         .from("research_logs")
@@ -772,20 +773,20 @@
       checkBtn.classList.toggle("hidden", checked);
       undoCheckBtn.classList.toggle("hidden", !checked);
       checkBtn.disabled = checked;
-      undoCheckBtn.disabled = !    async function refreshLeaderboard() {
-      const { data, error } = await clientofilePreview();
+      undoCheckBtn.disabled = !checked;
+
+      const userLogs = logs || await getUserLogs(currentUser.id);
+      myStreak.textContent = calculateCurrentStreak(userLogs);
+      updateProfilePreview();
     }
 
     async function refreshLeaderboard() {
-      console.log("refreshLeaderboard start");
-
-      const { data, error } = await withTimeout(
-        client
-          .from("leaderboard_view")
-          .select("user_id, nickname, emoji, total_count, current_streak")
-          .order("current_streak", { ascending: false })
-          .order("total_count", { ascending: false })
-          .limit(30);
+      const { data, error } = await client
+        .from("leaderboard_view")
+        .select("user_id, nickname, emoji, total_count, current_streak")
+        .order("current_streak", { ascending: false })
+        .order("total_count", { ascending: false })
+        .limit(30);
 
       if (error) {
         leaderboard.innerHTML = `<div class="empty">리더보드를 불러오지 못함: ${escapeHtml(error.message)}</div>`;
