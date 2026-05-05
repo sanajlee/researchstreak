@@ -285,7 +285,7 @@
 
     <section id="authCard" class="card">
       <h2>로그인 / 회원가입</h2>
-      <p class="small">처음 쓰는 이메일이면 회원가입 버튼을 누르면 됨. 이메일 인증 설정은 Supabase에서 끌 수도 있음.</p>
+      <p class="small">처음 쓰는 이메일이면 회원가입 버튼을 누르면 됨.</p>
 
       <label for="email">이메일</label>
       <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
@@ -337,8 +337,8 @@
 
   <script>
     // 1. Supabase 프로젝트에서 Project URL과 anon public key를 복사해서 넣기
-    const SUPABASE_URL = "YOUR_SUPABASE_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
