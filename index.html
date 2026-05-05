@@ -366,9 +366,6 @@
     const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
 
-    console.log("URL:", SUPABASE_URL);
-    console.log("KEY:", SUPABASE_ANON_KEY.slice(0, 20));
-
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const $ = (id) => document.getElementById(id);
 
@@ -500,11 +497,19 @@
     }
 
     async function getProfile(user) {
-      const { data, error } = await client
-        .from("profiles")
-        .select("id, nickname, emoji")
-        .eq("id", user.id)
-        .single();
+      console.log("getProfile start", user.id);
+      setStatus(authStatus, "프로필 불러오는 중...");
+
+      const { data, error } = await withTimeout(
+        client
+          .from("profiles")
+          .select("id, nickname, emoji")
+          .eq("id", user.id)
+          .single(),
+        10000
+      );
+
+      console.log("getProfile result", { data, error });
 
       if (error && error.code !== "PGRST116") throw error;
       if (data) return { ...data, emoji: data.emoji || "🔥" };
@@ -632,16 +637,26 @@
     }
 
     async function loadSession() {
-      const { data, error } = await client.auth.getSession();
-      if (error || !data.session) {
-        renderLoggedOut();
-        return;
-      }
+      console.log("loadSession start");
 
-      currentUser = data.session.user;
-      currentProfile = await getProfile(currentUser);
-      renderLoggedIn();
-      await refreshAll();
+      try {
+        const { data, error } = await withTimeout(client.auth.getSession(), 10000);
+        console.log("getSession result", { data, error });
+
+        if (error || !data.session) {
+          renderLoggedOut();
+          return;
+        }
+
+        currentUser = data.session.user;
+        currentProfile = await getProfile(currentUser);
+        renderLoggedIn();
+        await refreshAll();
+      } catch (err) {
+        console.error("loadSession failed", err);
+        renderLoggedOut();
+        setStatus(authStatus, `세션/프로필 로딩 실패: ${err.message}`, true);
+      }
     }
 
     function renderLoggedOut() {
@@ -726,12 +741,19 @@
     }
 
     async function refreshLeaderboard() {
-      const { data, error } = await client
-        .from("leaderboard_view")
-        .select("user_id, nickname, emoji, total_count, current_streak")
-        .order("current_streak", { ascending: false })
-        .order("total_count", { ascending: false })
-        .limit(30);
+      console.log("refreshLeaderboard start");
+
+      const { data, error } = await withTimeout(
+        client
+          .from("leaderboard_view")
+          .select("user_id, nickname, emoji, total_count, current_streak")
+          .order("current_streak", { ascending: false })
+          .order("total_count", { ascending: false })
+          .limit(30),
+        10000
+      );
+
+      console.log("refreshLeaderboard result", { data, error });
 
       if (error) {
         leaderboard.innerHTML = `<div class="empty">리더보드를 불러오지 못함: ${escapeHtml(error.message)}</div>`;
