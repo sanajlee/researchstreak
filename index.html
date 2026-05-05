@@ -18,9 +18,7 @@
       --ok: #2f9e44;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,15 +31,9 @@
       padding: 32px 16px;
     }
 
-    .app {
-      width: 100%;
-      max-width: 760px;
-    }
+    .app { width: 100%; max-width: 760px; }
 
-    header {
-      margin-bottom: 20px;
-      text-align: center;
-    }
+    header { margin-bottom: 20px; text-align: center; }
 
     h1 {
       font-size: clamp(2rem, 6vw, 4rem);
@@ -49,11 +41,7 @@
       letter-spacing: -0.06em;
     }
 
-    .subtitle {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 1rem;
-    }
+    .subtitle { margin-top: 8px; color: var(--muted); font-size: 1rem; }
 
     .card {
       background: rgba(255, 255, 255, 0.9);
@@ -65,9 +53,7 @@
       margin-bottom: 16px;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     label {
       display: block;
@@ -102,31 +88,12 @@
       transition: transform 0.12s ease, opacity 0.12s ease;
     }
 
-    button:hover {
-      transform: translateY(-1px);
-    }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .secondary {
-      background: #eee8d8;
-      color: var(--ink);
-    }
-
-    .danger {
-      background: var(--danger);
-    }
+    .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .secondary { background: #eee8d8; color: var(--ink); }
+    .danger { background: var(--danger); }
 
     .big-check {
       width: 100%;
@@ -137,12 +104,8 @@
       margin: 14px 0;
     }
 
-    .status {
-      min-height: 24px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-top: 10px;
-    }
+    .status { min-height: 24px; color: var(--muted); font-size: 0.95rem; margin-top: 10px; }
+    .small { font-size: 0.85rem; color: var(--muted); }
 
     .profile-row {
       display: flex;
@@ -152,22 +115,9 @@
       flex-wrap: wrap;
     }
 
-    .nickname {
-      font-size: 1.4rem;
-      font-weight: 900;
-    }
-
-    .streak-number {
-      font-size: 3.5rem;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: -0.08em;
-    }
-
-    .streak-label {
-      color: var(--muted);
-      font-weight: 700;
-    }
+    .nickname { font-size: 1.4rem; font-weight: 900; }
+    .streak-number { font-size: 3.5rem; line-height: 1; font-weight: 950; letter-spacing: -0.08em; }
+    .streak-label { color: var(--muted); font-weight: 700; }
 
     .today-badge {
       display: inline-flex;
@@ -181,10 +131,7 @@
       font-size: 0.9rem;
     }
 
-    .today-badge.done {
-      background: #dff4e5;
-      color: #126a2c;
-    }
+    .today-badge.done { background: #dff4e5; color: #126a2c; }
 
     .leaderboard-title {
       display: flex;
@@ -194,15 +141,8 @@
       margin-bottom: 10px;
     }
 
-    .leaderboard-title h2 {
-      margin: 0;
-      font-size: 1.35rem;
-    }
-
-    .leaderboard-list {
-      display: grid;
-      gap: 10px;
-    }
+    .leaderboard-title h2 { margin: 0; font-size: 1.35rem; }
+    .leaderboard-list { display: grid; gap: 10px; }
 
     .leaderboard-item {
       display: grid;
@@ -225,22 +165,9 @@
       font-weight: 900;
     }
 
-    .person-name {
-      font-weight: 900;
-      margin-bottom: 5px;
-    }
-
-    .dots {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      color: var(--accent-dark);
-      word-break: break-all;
-      line-height: 1.4;
-    }
-
-    .score {
-      font-weight: 950;
-      font-size: 1.2rem;
-    }
+    .person-name { font-weight: 900; margin-bottom: 5px; }
+    .dots { word-break: break-all; line-height: 1.55; letter-spacing: 0.05em; }
+    .score { font-weight: 950; font-size: 1.2rem; }
 
     .empty {
       color: var(--muted);
@@ -250,33 +177,130 @@
       border-radius: 18px;
     }
 
-    .small {
-      font-size: 0.85rem;
-      color: var(--muted);
+    .top-actions {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 20;
+    }
+
+    .icon-button {
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(70, 54, 20, 0.12);
+      font-size: 1.35rem;
+    }
+
+    .side-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.28);
+      z-index: 30;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(360px, 92vw);
+      height: 100vh;
+      background: var(--card);
+      border-left: 1px solid var(--line);
+      box-shadow: -18px 0 45px rgba(0, 0, 0, 0.12);
+      z-index: 40;
+      padding: 22px;
+      transform: translateX(110%);
+      transition: transform 0.18s ease;
+      overflow-y: auto;
+    }
+
+    .side-menu.open { transform: translateX(0); }
+
+    .side-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .side-header h2 { margin: 0; }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .emoji-option {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--ink);
+      font-size: 1.35rem;
+      padding: 0;
+    }
+
+    .emoji-option.selected {
+      outline: 3px solid rgba(244, 185, 66, 0.42);
+      border-color: var(--accent);
+      background: #fff5d3;
+    }
+
+    .preview-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #fff9e8;
+      border: 1px solid var(--line);
     }
 
     @media (max-width: 520px) {
-      body {
-        padding: 18px 12px;
-      }
-
-      .card {
-        padding: 18px;
-        border-radius: 20px;
-      }
-
-      .leaderboard-item {
-        grid-template-columns: 36px 1fr;
-      }
-
-      .score {
-        grid-column: 2;
-        justify-self: start;
-      }
+      body { padding: 18px 12px; }
+      .card { padding: 18px; border-radius: 20px; }
+      .leaderboard-item { grid-template-columns: 36px 1fr; }
+      .score { grid-column: 2; justify-self: start; }
     }
   </style>
 </head>
 <body>
+  <button id="menuBtn" class="icon-button top-actions hidden" aria-label="프로필 메뉴 열기">☰</button>
+  <div id="sideBackdrop" class="side-backdrop hidden"></div>
+
+  <aside id="sideMenu" class="side-menu" aria-label="프로필 설정">
+    <div class="side-header">
+      <h2>프로필 설정</h2>
+      <button id="closeMenuBtn" class="icon-button" aria-label="프로필 메뉴 닫기">×</button>
+    </div>
+
+    <label for="profileNickname">닉네임</label>
+    <input id="profileNickname" type="text" placeholder="리더보드에 표시될 이름" />
+
+    <label for="profileEmoji">표시 이모지</label>
+    <input id="profileEmoji" type="text" maxlength="8" placeholder="🔥" inputmode="text" />
+    <p class="small">폰에서는 이 칸을 누르고 키보드의 이모지 버튼으로 직접 입력하면 됨. 아래 빠른 선택도 가능.</p>
+    <div id="emojiGrid" class="emoji-grid"></div>
+
+    <div class="preview-box">
+      <div class="small">미리보기</div>
+      <div><strong id="profilePreviewName">-</strong>: <span id="profilePreviewDots"></span></div>
+    </div>
+
+    <div class="button-row">
+      <button id="saveProfileBtn">저장</button>
+    </div>
+    <div id="profileStatus" class="status"></div>
+  </aside>
+
   <main class="app">
     <header>
       <h1>연구했니?</h1>
@@ -339,12 +363,10 @@
   </main>
 
   <script>
-    // 1. Supabase 프로젝트에서 Project URL과 anon public key를 복사해서 넣기
     const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     const $ = (id) => document.getElementById(id);
 
     const authCard = $("authCard");
@@ -360,36 +382,133 @@
     const checkBtn = $("checkBtn");
     const myStreak = $("myStreak");
     const leaderboard = $("leaderboard");
+    const menuBtn = $("menuBtn");
+    const sideMenu = $("sideMenu");
+    const sideBackdrop = $("sideBackdrop");
+    const closeMenuBtn = $("closeMenuBtn");
+    const profileNickname = $("profileNickname");
+    const emojiGrid = $("emojiGrid");
+    const profileEmoji = $("profileEmoji");
+    const saveProfileBtn = $("saveProfileBtn");
+    const profileStatus = $("profileStatus");
+    const profilePreviewName = $("profilePreviewName");
+    const profilePreviewDots = $("profilePreviewDots");
+    const signupToggleBtn = $("signupToggleBtn");
+    const signupConfirmBtn = $("signupConfirmBtn");
+    const nicknameBlock = $("nicknameBlock");
+    const authTitle = $("authTitle");
 
+    const emojiOptions = ["🔥", "☀️", "🌙", "⭐", "🌱", "🌿", "🍀", "🧠", "📚", "✍️", "📝", "💻", "🐣", "🐦", "🐈", "🦊", "🍊", "☕"];
+    let selectedEmoji = "🔥";
     let currentUser = null;
     let currentProfile = null;
 
     function todayKST() {
-      const now = new Date();
-      const formatter = new Intl.DateTimeFormat("en-CA", {
+      return new Intl.DateTimeFormat("en-CA", {
         timeZone: "Asia/Seoul",
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
-      });
-      return formatter.format(now);
+      }).format(new Date());
     }
 
     function dateMinusDaysKST(days) {
       const now = new Date();
       now.setDate(now.getDate() - days);
-      const formatter = new Intl.DateTimeFormat("en-CA", {
+      return new Intl.DateTimeFormat("en-CA", {
         timeZone: "Asia/Seoul",
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
-      });
-      return formatter.format(now);
+      }).format(now);
     }
 
     function setStatus(el, message, isError = false) {
       el.textContent = message;
       el.style.color = isError ? "var(--danger)" : "var(--muted)";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function buildEmojiGrid() {
+      emojiGrid.innerHTML = emojiOptions.map((emoji) => `
+        <button type="button" class="emoji-option" data-emoji="${emoji}" aria-label="${emoji} 선택">${emoji}</button>
+      `).join("");
+
+      emojiGrid.querySelectorAll(".emoji-option").forEach((button) => {
+        button.addEventListener("click", () => {
+          selectedEmoji = button.dataset.emoji;
+          profileEmoji.value = selectedEmoji;
+          renderEmojiSelection();
+          updateProfilePreview();
+        });
+      });
+    }
+
+    function renderEmojiSelection() {
+      emojiGrid.querySelectorAll(".emoji-option").forEach((button) => {
+        button.classList.toggle("selected", button.dataset.emoji === selectedEmoji);
+      });
+    }
+
+    function updateProfilePreview() {
+      const name = profileNickname.value.trim() || currentProfile?.nickname || "익명의 연구자";
+      const typedEmoji = profileEmoji.value.trim() || "🔥";
+      selectedEmoji = typedEmoji;
+      const streak = Math.max(Number(myStreak.textContent || 0), 1);
+      profilePreviewName.textContent = `${selectedEmoji} ${name}`;
+      profilePreviewDots.textContent = selectedEmoji.repeat(Math.min(streak, 20));
+      renderEmojiSelection();
+    }
+
+    function syncProfileForm() {
+      if (!currentProfile) return;
+      profileNickname.value = currentProfile.nickname || "";
+      selectedEmoji = currentProfile.emoji || "🔥";
+      profileEmoji.value = selectedEmoji;
+      renderEmojiSelection();
+      updateProfilePreview();
+    }
+
+    function openSideMenu() {
+      syncProfileForm();
+      sideMenu.classList.add("open");
+      sideBackdrop.classList.remove("hidden");
+    }
+
+    function closeSideMenu() {
+      sideMenu.classList.remove("open");
+      sideBackdrop.classList.add("hidden");
+      setStatus(profileStatus, "");
+    }
+
+    async function upsertProfile(userId, nickname, emoji = "🔥") {
+      const { error } = await client
+        .from("profiles")
+        .upsert({ id: userId, nickname: nickname || "익명의 연구자", emoji: emoji || "🔥" }, { onConflict: "id" });
+      if (error) throw error;
+    }
+
+    async function getProfile(user) {
+      const { data, error } = await client
+        .from("profiles")
+        .select("id, nickname, emoji")
+        .eq("id", user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+      if (data) return { ...data, emoji: data.emoji || "🔥" };
+
+      const fallbackName = user.user_metadata?.nickname || user.email?.split("@")[0] || "익명의 연구자";
+      await upsertProfile(user.id, fallbackName, "🔥");
+      return { id: user.id, nickname: fallbackName, emoji: "🔥" };
     }
 
     async function signUp() {
@@ -405,9 +524,7 @@
       const { data, error } = await client.auth.signUp({
         email,
         password,
-        options: {
-          data: { nickname }
-        }
+        options: { data: { nickname } }
       });
 
       if (error) {
@@ -415,10 +532,7 @@
         return;
       }
 
-      if (data.user) {
-        await upsertProfile(data.user.id, nickname);
-      }
-
+      if (data.user) await upsertProfile(data.user.id, nickname, "🔥");
       setStatus(authStatus, "회원가입 완료. 이메일 인증을 켜둔 경우 메일함을 확인해야 함.");
       await loadSession();
     }
@@ -433,12 +547,10 @@
       }
 
       const { error } = await client.auth.signInWithPassword({ email, password });
-
       if (error) {
         setStatus(authStatus, error.message, true);
         return;
       }
-
       await loadSession();
     }
 
@@ -449,36 +561,41 @@
       renderLoggedOut();
     }
 
-    async function upsertProfile(userId, nickname) {
-      const cleanNickname = nickname || "익명의 연구자";
-      const { error } = await client
-        .from("profiles")
-        .upsert({ id: userId, nickname: cleanNickname }, { onConflict: "id" });
+    async function saveProfile() {
+      if (!currentUser) return;
+      const nickname = profileNickname.value.trim();
+      const emoji = profileEmoji.value.trim() || "🔥";
+      selectedEmoji = emoji;
 
-      if (error) throw error;
-    }
-
-    async function getProfile(user) {
-      const { data, error } = await client
-        .from("profiles")
-        .select("id, nickname")
-        .eq("id", user.id)
-        .single();
-
-      if (error && error.code !== "PGRST116") {
-        throw error;
+      if (!nickname) {
+        setStatus(profileStatus, "닉네임은 비워둘 수 없음.", true);
+        return;
       }
 
-      if (data) return data;
+      saveProfileBtn.disabled = true;
+      setStatus(profileStatus, "저장 중...");
 
-      const fallbackName = user.user_metadata?.nickname || user.email?.split("@")[0] || "익명의 연구자";
-      await upsertProfile(user.id, fallbackName);
-      return { id: user.id, nickname: fallbackName };
+      const { data, error } = await client
+        .from("profiles")
+        .update({ nickname, emoji })
+        .eq("id", currentUser.id)
+        .select("id, nickname, emoji")
+        .single();
+
+      if (error) {
+        setStatus(profileStatus, error.message, true);
+      } else {
+        currentProfile = { ...data, emoji: data.emoji || "🔥" };
+        currentNickname.textContent = `${currentProfile.emoji} ${currentProfile.nickname}`;
+        setStatus(profileStatus, "저장됨. 리더보드에도 반영됨.");
+        await refreshLeaderboard();
+      }
+
+      saveProfileBtn.disabled = false;
     }
 
     async function loadSession() {
       const { data, error } = await client.auth.getSession();
-
       if (error || !data.session) {
         renderLoggedOut();
         return;
@@ -494,6 +611,8 @@
       authCard.classList.remove("hidden");
       mainCard.classList.add("hidden");
       leaderboardCard.classList.add("hidden");
+      menuBtn.classList.add("hidden");
+      closeSideMenu();
       setStatus(authStatus, "");
     }
 
@@ -501,7 +620,9 @@
       authCard.classList.add("hidden");
       mainCard.classList.remove("hidden");
       leaderboardCard.classList.remove("hidden");
-      currentNickname.textContent = currentProfile.nickname;
+      menuBtn.classList.remove("hidden");
+      currentNickname.textContent = `${currentProfile.emoji || "🔥"} ${currentProfile.nickname}`;
+      syncProfileForm();
     }
 
     async function hasCheckedToday(userId) {
@@ -511,14 +632,12 @@
         .eq("user_id", userId)
         .eq("log_date", todayKST())
         .maybeSingle();
-
       if (error) throw error;
       return Boolean(data);
     }
 
     async function checkToday() {
       if (!currentUser) return;
-
       checkBtn.disabled = true;
       setStatus(mainStatus, "기록 중...");
 
@@ -527,11 +646,8 @@
         .insert({ user_id: currentUser.id, log_date: todayKST() });
 
       if (error) {
-        if (error.code === "23505") {
-          setStatus(mainStatus, "오늘은 이미 찍었음. 양심 DB 정상 작동 중.");
-        } else {
-          setStatus(mainStatus, error.message, true);
-        }
+        if (error.code === "23505") setStatus(mainStatus, "오늘은 이미 찍었음. 양심 DB 정상 작동 중.");
+        else setStatus(mainStatus, error.message, true);
       } else {
         setStatus(mainStatus, "좋다. 오늘 연구한 사람으로 기록됨.");
       }
@@ -546,7 +662,6 @@
         .select("log_date")
         .eq("user_id", userId)
         .order("log_date", { ascending: false });
-
       if (error) throw error;
       return data.map((row) => row.log_date);
     }
@@ -554,13 +669,11 @@
     function calculateCurrentStreak(logDates) {
       const dateSet = new Set(logDates);
       let streak = 0;
-
       for (let i = 0; i < 3650; i++) {
         const target = dateMinusDaysKST(i);
         if (dateSet.has(target)) streak += 1;
         else break;
       }
-
       return streak;
     }
 
@@ -572,12 +685,13 @@
 
       const logs = await getUserLogs(currentUser.id);
       myStreak.textContent = calculateCurrentStreak(logs);
+      updateProfilePreview();
     }
 
     async function refreshLeaderboard() {
       const { data, error } = await client
         .from("leaderboard_view")
-        .select("user_id, nickname, total_count, current_streak")
+        .select("user_id, nickname, emoji, total_count, current_streak")
         .order("current_streak", { ascending: false })
         .order("total_count", { ascending: false })
         .limit(30);
@@ -593,13 +707,14 @@
       }
 
       leaderboard.innerHTML = data.map((row, index) => {
-        const dots = "O".repeat(Math.min(row.current_streak, 60));
+        const emoji = row.emoji || "🔥";
+        const dots = emoji.repeat(Math.min(row.current_streak, 60));
         const suffix = row.current_streak > 60 ? ` +${row.current_streak - 60}` : "";
         return `
           <div class="leaderboard-item">
             <div class="rank">${index + 1}</div>
             <div>
-              <div class="person-name">${escapeHtml(row.nickname)}</div>
+              <div class="person-name">${emoji} ${escapeHtml(row.nickname)}</div>
               <div class="dots">${dots || "-"}${suffix}</div>
               <div class="small">총 ${row.total_count}일 기록</div>
             </div>
@@ -615,20 +730,6 @@
       await refreshLeaderboard();
     }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    const signupToggleBtn = $("signupToggleBtn");
-    const signupConfirmBtn = $("signupConfirmBtn");
-    const nicknameBlock = $("nicknameBlock");
-    const authTitle = $("authTitle");
-
     signupToggleBtn.addEventListener("click", () => {
       nicknameBlock.classList.remove("hidden");
       signupConfirmBtn.classList.remove("hidden");
@@ -637,15 +738,20 @@
     });
 
     signupConfirmBtn.addEventListener("click", signUp);
-    $("loginBtn").addEventListener("click", login);
-    $("logoutBtn").addEventListener("click", logout);
-    $("checkBtn").addEventListener("click", checkToday);
-    $("refreshBtn").addEventListener("click", refreshAll);
+    loginBtn.addEventListener("click", login);
+    logoutBtn.addEventListener("click", logout);
+    checkBtn.addEventListener("click", checkToday);
+    refreshBtn.addEventListener("click", refreshAll);
+    menuBtn.addEventListener("click", openSideMenu);
+    closeMenuBtn.addEventListener("click", closeSideMenu);
+    sideBackdrop.addEventListener("click", closeSideMenu);
+    saveProfileBtn.addEventListener("click", saveProfile);
+    profileNickname.addEventListener("input", updateProfilePreview);
+    profileEmoji.addEventListener("input", updateProfilePreview);
 
-    client.auth.onAuthStateChange(() => {
-      loadSession();
-    });
+    client.auth.onAuthStateChange(() => loadSession());
 
+    buildEmojiGrid();
     loadSession();
   </script>
 </body>
