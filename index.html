@@ -811,8 +811,8 @@
 
       leaderboard.innerHTML = data.map((row, index) => {
         const emoji = row.emoji || "🔥";
-        const dots = emoji.repeat(Math.min(row.current_streak, 60));
-        const suffix = row.current_streak > 60 ? ` +${row.current_streak - 60}` : "";
+        const dots = emoji.repeat(Math.min(row.current_streak, 20));
+        const suffix = row.current_streak > 20 ? ` +${row.current_streak - 20}` : "";
         return `
           <div class="leaderboard-item">
             <div class="rank">${index + 1}</div>
