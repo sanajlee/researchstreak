@@ -365,7 +365,7 @@
   <script>
     const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
-
+    
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const $ = (id) => document.getElementById(id);
 
@@ -537,6 +537,15 @@
       await loadSession();
     }
 
+    function withTimeout(promise, ms = 10000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+          setTimeout(() => reject(new Error("요청 시간이 초과됨. Supabase URL/anon key, 인터넷 연결, 브라우저 Network 탭을 확인해봐.")), ms);
+        })
+      ]);
+    }
+
     async function login() {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
@@ -548,8 +557,16 @@
         return;
       }
 
+      if (SUPABASE_URL.includes("YOUR_SUPABASE") || SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")) {
+        setStatus(authStatus, "Supabase URL 또는 anon key가 아직 기본값임. 실제 값으로 바꿔야 함.", true);
+        return;
+      }
+
       try {
-        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        const { data, error } = await withTimeout(
+          client.auth.signInWithPassword({ email, password }),
+          10000
+        );
 
         if (error) {
           setStatus(authStatus, `로그인 실패: ${error.message}`, true);
@@ -566,7 +583,7 @@
         setStatus(authStatus, "로그인 성공. 프로필 불러오는 중...");
         await loadSession();
       } catch (err) {
-        setStatus(authStatus, `로그인 중 예외 발생: ${err.message}`, true);
+        setStatus(authStatus, `로그인 중단: ${err.message}`, true);
         console.error("Unexpected login exception:", err);
       }
     }
