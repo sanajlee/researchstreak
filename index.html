@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>연구했니? Streak Leaderboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #f8f7f2;
+      --card: #ffffff;
+      --ink: #222222;
+      --muted: #777777;
+      --line: #e8e3d7;
+      --accent: #f4b942;
+      --accent-dark: #d99000;
+      --danger: #d84a4a;
+      --ok: #2f9e44;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #fff4cf 0, #f8f7f2 35%, #eef5ff 100%);
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      margin: 0;
+      letter-spacing: -0.06em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 18px 45px rgba(70, 54, 20, 0.08);
+      backdrop-filter: blur(10px);
+      margin-bottom: 16px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      font-size: 1rem;
+      background: #fff;
+    }
+
+    input:focus {
+      outline: 3px solid rgba(244, 185, 66, 0.25);
+      border-color: var(--accent);
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--ink);
+      color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .secondary {
+      background: #eee8d8;
+      color: var(--ink);
+    }
+
+    .danger {
+      background: var(--danger);
+    }
+
+    .big-check {
+      width: 100%;
+      padding: 22px;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--accent), #ff7a59);
+      color: #1d1400;
+      margin: 14px 0;
+    }
+
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nickname {
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+
+    .streak-number {
+      font-size: 3.5rem;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.08em;
+    }
+
+    .streak-label {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .today-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #f2ead8;
+      color: #5d4500;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .today-badge.done {
+      background: #dff4e5;
+      color: #126a2c;
+    }
+
+    .leaderboard-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .leaderboard-title h2 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .leaderboard-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+
+    .rank {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #f1ead8;
+      font-weight: 900;
+    }
+
+    .person-name {
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .dots {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--accent-dark);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    .score {
+      font-weight: 950;
+      font-size: 1.2rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+    }
+
+    .small {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .card {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .leaderboard-item {
+        grid-template-columns: 36px 1fr;
+      }
+
+      .score {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>연구했니?</h1>
+      <div class="subtitle">오늘 연구했으면 찍고 가라. 도망은 DB에 기록된다.</div>
+    </header>
+
+    <section id="authCard" class="card">
+      <h2>로그인 / 회원가입</h2>
+      <p class="small">처음 쓰는 이메일이면 회원가입 버튼을 누르면 됨. 이메일 인증 설정은 Supabase에서 끌 수도 있음.</p>
+
+      <label for="email">이메일</label>
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+
+      <label for="password">비밀번호</label>
+      <input id="password" type="password" placeholder="6자 이상" autocomplete="current-password" />
+
+      <label for="nickname">닉네임</label>
+      <input id="nickname" type="text" placeholder="리더보드에 표시될 이름" />
+
+      <div class="button-row">
+        <button id="loginBtn">로그인</button>
+        <button id="signupBtn" class="secondary">회원가입</button>
+      </div>
+
+      <div id="authStatus" class="status"></div>
+    </section>
+
+    <section id="mainCard" class="card hidden">
+      <div class="profile-row">
+        <div>
+          <div class="small">현재 사용자</div>
+          <div id="currentNickname" class="nickname">-</div>
+        </div>
+        <div id="todayBadge" class="today-badge">오늘 아직 안 함</div>
+      </div>
+
+      <button id="checkBtn" class="big-check">오늘 연구했다 ✍️</button>
+
+      <div class="profile-row">
+        <div>
+          <div class="streak-label">내 현재 streak</div>
+          <div><span id="myStreak" class="streak-number">0</span> 일</div>
+        </div>
+        <button id="logoutBtn" class="danger">로그아웃</button>
+      </div>
+
+      <div id="mainStatus" class="status"></div>
+    </section>
+
+    <section id="leaderboardCard" class="card hidden">
+      <div class="leaderboard-title">
+        <h2>Leaderboard</h2>
+        <button id="refreshBtn" class="secondary">새로고침</button>
+      </div>
+      <div id="leaderboard" class="leaderboard-list"></div>
+    </section>
+  </main>
+
+  <script>
+    // 1. Supabase 프로젝트에서 Project URL과 anon public key를 복사해서 넣기
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const $ = (id) => document.getElementById(id);
+
+    const authCard = $("authCard");
+    const mainCard = $("mainCard");
+    const leaderboardCard = $("leaderboardCard");
+    const emailInput = $("email");
+    const passwordInput = $("password");
+    const nicknameInput = $("nickname");
+    const authStatus = $("authStatus");
+    const mainStatus = $("mainStatus");
+    const currentNickname = $("currentNickname");
+    const todayBadge = $("todayBadge");
+    const checkBtn = $("checkBtn");
+    const myStreak = $("myStreak");
+    const leaderboard = $("leaderboard");
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    function todayKST() {
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+      return formatter.format(now);
+    }
+
+    function dateMinusDaysKST(days) {
+      const now = new Date();
+      now.setDate(now.getDate() - days);
+      const formatter = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+      return formatter.format(now);
+    }
+
+    function setStatus(el, message, isError = false) {
+      el.textContent = message;
+      el.style.color = isError ? "var(--danger)" : "var(--muted)";
+    }
+
+    async function signUp() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const nickname = nicknameInput.value.trim();
+
+      if (!email || !password || !nickname) {
+        setStatus(authStatus, "이메일, 비밀번호, 닉네임 다 넣어야 함.", true);
+        return;
+      }
+
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { nickname }
+        }
+      });
+
+      if (error) {
+        setStatus(authStatus, error.message, true);
+        return;
+      }
+
+      if (data.user) {
+        await upsertProfile(data.user.id, nickname);
+      }
+
+      setStatus(authStatus, "회원가입 완료. 이메일 인증을 켜둔 경우 메일함을 확인해야 함.");
+      await loadSession();
+    }
+
+    async function login() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        setStatus(authStatus, "이메일과 비밀번호를 넣어줘.", true);
+        return;
+      }
+
+      const { error } = await client.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        setStatus(authStatus, error.message, true);
+        return;
+      }
+
+      await loadSession();
+    }
+
+    async function logout() {
+      await client.auth.signOut();
+      currentUser = null;
+      currentProfile = null;
+      renderLoggedOut();
+    }
+
+    async function upsertProfile(userId, nickname) {
+      const cleanNickname = nickname || "익명의 연구자";
+      const { error } = await client
+        .from("profiles")
+        .upsert({ id: userId, nickname: cleanNickname }, { onConflict: "id" });
+
+      if (error) throw error;
+    }
+
+    async function getProfile(user) {
+      const { data, error } = await client
+        .from("profiles")
+        .select("id, nickname")
+        .eq("id", user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        throw error;
+      }
+
+      if (data) return data;
+
+      const fallbackName = user.user_metadata?.nickname || user.email?.split("@")[0] || "익명의 연구자";
+      await upsertProfile(user.id, fallbackName);
+      return { id: user.id, nickname: fallbackName };
+    }
+
+    async function loadSession() {
+      const { data, error } = await client.auth.getSession();
+
+      if (error || !data.session) {
+        renderLoggedOut();
+        return;
+      }
+
+      currentUser = data.session.user;
+      currentProfile = await getProfile(currentUser);
+      renderLoggedIn();
+      await refreshAll();
+    }
+
+    function renderLoggedOut() {
+      authCard.classList.remove("hidden");
+      mainCard.classList.add("hidden");
+      leaderboardCard.classList.add("hidden");
+      setStatus(authStatus, "");
+    }
+
+    function renderLoggedIn() {
+      authCard.classList.add("hidden");
+      mainCard.classList.remove("hidden");
+      leaderboardCard.classList.remove("hidden");
+      currentNickname.textContent = currentProfile.nickname;
+    }
+
+    async function hasCheckedToday(userId) {
+      const { data, error } = await client
+        .from("research_logs")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("log_date", todayKST())
+        .maybeSingle();
+
+      if (error) throw error;
+      return Boolean(data);
+    }
+
+    async function checkToday() {
+      if (!currentUser) return;
+
+      checkBtn.disabled = true;
+      setStatus(mainStatus, "기록 중...");
+
+      const { error } = await client
+        .from("research_logs")
+        .insert({ user_id: currentUser.id, log_date: todayKST() });
+
+      if (error) {
+        if (error.code === "23505") {
+          setStatus(mainStatus, "오늘은 이미 찍었음. 양심 DB 정상 작동 중.");
+        } else {
+          setStatus(mainStatus, error.message, true);
+        }
+      } else {
+        setStatus(mainStatus, "좋다. 오늘 연구한 사람으로 기록됨.");
+      }
+
+      await refreshAll();
+      checkBtn.disabled = false;
+    }
+
+    async function getUserLogs(userId) {
+      const { data, error } = await client
+        .from("research_logs")
+        .select("log_date")
+        .eq("user_id", userId)
+        .order("log_date", { ascending: false });
+
+      if (error) throw error;
+      return data.map((row) => row.log_date);
+    }
+
+    function calculateCurrentStreak(logDates) {
+      const dateSet = new Set(logDates);
+      let streak = 0;
+
+      for (let i = 0; i < 3650; i++) {
+        const target = dateMinusDaysKST(i);
+        if (dateSet.has(target)) streak += 1;
+        else break;
+      }
+
+      return streak;
+    }
+
+    async function refreshMine() {
+      const checked = await hasCheckedToday(currentUser.id);
+      todayBadge.textContent = checked ? "오늘 연구함" : "오늘 아직 안 함";
+      todayBadge.classList.toggle("done", checked);
+      checkBtn.disabled = checked;
+
+      const logs = await getUserLogs(currentUser.id);
+      myStreak.textContent = calculateCurrentStreak(logs);
+    }
+
+    async function refreshLeaderboard() {
+      const { data, error } = await client
+        .from("leaderboard_view")
+        .select("user_id, nickname, total_count, current_streak")
+        .order("current_streak", { ascending: false })
+        .order("total_count", { ascending: false })
+        .limit(30);
+
+      if (error) {
+        leaderboard.innerHTML = `<div class="empty">리더보드를 불러오지 못함: ${escapeHtml(error.message)}</div>`;
+        return;
+      }
+
+      if (!data.length) {
+        leaderboard.innerHTML = `<div class="empty">아직 아무도 연구하지 않았다. 음산하다.</div>`;
+        return;
+      }
+
+      leaderboard.innerHTML = data.map((row, index) => {
+        const dots = "O".repeat(Math.min(row.current_streak, 60));
+        const suffix = row.current_streak > 60 ? ` +${row.current_streak - 60}` : "";
+        return `
+          <div class="leaderboard-item">
+            <div class="rank">${index + 1}</div>
+            <div>
+              <div class="person-name">${escapeHtml(row.nickname)}</div>
+              <div class="dots">${dots || "-"}${suffix}</div>
+              <div class="small">총 ${row.total_count}일 기록</div>
+            </div>
+            <div class="score">${row.current_streak}일</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function refreshAll() {
+      if (!currentUser) return;
+      await refreshMine();
+      await refreshLeaderboard();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    $("signupBtn").addEventListener("click", signUp);
+    $("loginBtn").addEventListener("click", login);
+    $("logoutBtn").addEventListener("click", logout);
+    $("checkBtn").addEventListener("click", checkToday);
+    $("refreshBtn").addEventListener("click", refreshAll);
+
+    client.auth.onAuthStateChange(() => {
+      loadSession();
+    });
+
+    loadSession();
+  </script>
+</body>
+</html>
