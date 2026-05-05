@@ -366,6 +366,9 @@
     const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
 
+    console.log("URL:", SUPABASE_URL);
+    console.log("KEY:", SUPABASE_ANON_KEY.slice(0, 20));
+
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const $ = (id) => document.getElementById(id);
 
