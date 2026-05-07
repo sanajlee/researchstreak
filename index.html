@@ -779,14 +779,36 @@
       return data.map((row) => row.log_date);
     }
 
+    function parseLocalDate(dateStr) {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function isWeekendKST(dateStr) {
+      const d = parseLocalDate(dateStr);
+      const day = d.getDay();
+      return day === 0 || day === 6;
+    }
+
     function calculateCurrentStreak(logDates) {
       const dateSet = new Set(logDates);
       let streak = 0;
+
       for (let i = 0; i < 3650; i++) {
         const target = dateMinusDaysKST(i);
-        if (dateSet.has(target)) streak += 1;
-        else break;
+
+        if (dateSet.has(target)) {
+          streak += 1;
+          continue;
+        }
+
+        if (isWeekendKST(target)) {
+          continue;
+        }
+
+        break;
       }
+
       return streak;
     }
 
