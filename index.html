@@ -283,6 +283,48 @@
       border: 1px solid var(--line);
     }
 
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.34);
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .modal {
+      width: min(520px, 100%);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal h2 {
+      margin: 0 0 8px;
+    }
+
+    .patch-list {
+      margin: 14px 0;
+      padding-left: 1.2rem;
+      line-height: 1.65;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .checkbox-row input {
+      width: auto;
+    }
+
     @media (max-width: 520px) {
       body { padding: 18px 12px; }
       .card { padding: 18px; border-radius: 20px; }
@@ -292,6 +334,23 @@
   </style>
 </head>
 <body>
+  <div id="patchModalBackdrop" class="modal-backdrop hidden">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="patchTitle">
+      <h2 id="patchTitle">패치노트</h2>
+      <p class="small">연구했니? 업데이트 내역</p>
+      <ul class="patch-list">
+        <li>아이콘을 만들었다! 홈 화면에 다시 세팅해주세요🔥</li>
+      </ul>
+      <label class="checkbox-row" for="dontShowPatchAgain">
+        <input id="dontShowPatchAgain" type="checkbox" />
+        다시 보지 않기
+      </label>
+      <div class="button-row">
+        <button id="closePatchBtn">확인</button>
+      </div>
+    </section>
+  </div>
+
   <button id="menuBtn" class="icon-button top-actions hidden" aria-label="프로필 메뉴 열기">☰</button>
   <div id="sideBackdrop" class="side-backdrop hidden"></div>
 
@@ -434,6 +493,9 @@
     const showLoginBtn = $("showLoginBtn");
     const showSignupBtn = $("showSignupBtn");
     const signupConfirmBtn = $("signupConfirmBtn");
+    const patchModalBackdrop = $("patchModalBackdrop");
+    const dontShowPatchAgain = $("dontShowPatchAgain");
+    const closePatchBtn = $("closePatchBtn");
     const nicknameBlock = $("nicknameBlock");
     const authTitle = $("authTitle");
     const authHelp = $("authHelp");
@@ -441,6 +503,8 @@
     const authForm = $("authForm");
     const backToAuthChoiceBtn = $("backToAuthChoiceBtn");
 
+    const PATCH_VERSION = "2026-05-07-v1";
+    const PATCH_STORAGE_KEY = `researchPatchNoteSeen:${PATCH_VERSION}`;
     const emojiOptions = ["🔥", "☀️", "🌙", "⭐", "🌱", "🌿", "🍀", "🧠", "📚", "✍️", "📝", "💻", "🐣", "🐦", "🐈", "🦊", "🍊", "☕"];
     let selectedEmoji = "🔥";
     let currentUser = null;
@@ -472,6 +536,18 @@
     function setStatus(el, message, isError = false) {
       el.textContent = message;
       el.style.color = isError ? "var(--danger)" : "var(--muted)";
+    }
+
+    function showPatchModalIfNeeded() {
+      if (localStorage.getItem(PATCH_STORAGE_KEY) === "true") return;
+      patchModalBackdrop.classList.remove("hidden");
+    }
+
+    function closePatchModal() {
+      if (dontShowPatchAgain.checked) {
+        localStorage.setItem(PATCH_STORAGE_KEY, "true");
+      }
+      patchModalBackdrop.classList.add("hidden");
     }
 
     function escapeHtml(value) {
@@ -927,6 +1003,7 @@
     closeMenuBtn.addEventListener("click", closeSideMenu);
     sideBackdrop.addEventListener("click", closeSideMenu);
     saveProfileBtn.addEventListener("click", saveProfile);
+    closePatchBtn.addEventListener("click", closePatchModal);
     profileNickname.addEventListener("input", updateProfilePreview);
     profileEmoji.addEventListener("input", updateProfilePreview);
 
@@ -946,6 +1023,7 @@
     });
 
     buildEmojiGrid();
+    showPatchModalIfNeeded();
     loadSession();
   </script>
 </body>
