@@ -339,7 +339,7 @@
       <h2 id="patchTitle">패치노트</h2>
       <p class="small">연구했니? 업데이트 내역</p>
       <ul class="patch-list">
-        <li>아이콘을 만들었다! 홈 화면에 다시 세팅해주세요🔥</li>
+        <li>리더보드 표시 일수를 streak으로 조정</li>
       </ul>
       <label class="checkbox-row" for="dontShowPatchAgain">
         <input id="dontShowPatchAgain" type="checkbox" />
@@ -454,6 +454,7 @@
   <script>
     const SUPABASE_URL = "https://rsxrylszfhzxiegdczzc.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzeHJ5bHN6Zmh6eGllZ2RjenpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NzE5ODksImV4cCI6MjA5MzU0Nzk4OX0.DGaN6Zsp1ukleEm7NDhGgWma4-6Acma98VSy3mJ6tgQ";
+
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
@@ -655,7 +656,7 @@
       }
 
       if (data.user) await upsertProfile(data.user.id, nickname, "🔥");
-      setStatus(authStatus, "회원가입 완료. 이메일 인증을 켜둔 경우 메일함을 확인해야 함.");
+      setStatus(authStatus, "회원가입 완료.");
       await loadSession();
     }
 
@@ -932,15 +933,15 @@
 
       leaderboard.innerHTML = data.map((row, index) => {
         const emoji = row.emoji || "🔥";
-        const dots = emoji.repeat(Math.min(row.current_streak, 60));
-        const suffix = row.current_streak > 60 ? ` +${row.current_streak - 60}` : "";
+        const dots = emoji.repeat(Math.min(row.current_streak, 20));
+        const suffix = row.current_streak > 20 ? ` +${row.current_streak - 20}` : "";
         return `
           <div class="leaderboard-item">
             <div class="rank">${index + 1}</div>
             <div>
               <div class="person-name">${emoji} ${escapeHtml(row.nickname)}</div>
               <div class="dots">${dots || "-"}${suffix}</div>
-              <div class="small">총 ${row.total_count}일 기록</div>
+              <div class="small">현재 streak 기준 · 총 ${row.total_count}일 기록</div>
             </div>
             <div class="score">${row.current_streak}일</div>
           </div>
